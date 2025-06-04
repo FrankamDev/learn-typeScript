@@ -1,66 +1,74 @@
 import { useState } from 'react'
 
 const App = () => {
-  const [change, setChange] = useState('')
+  const [newTask, setNewTask] = useState('')
   const [tasks, setTasks] = useState([
-    {
-      id: 1,
-      name: 'Laver les habits',
-    },
-    {
-      id: 2,
-      name: 'Coder',
-    },
-    {
-      id: 3,
-      name: "Aller a l'ecole",
-    },
+    { id: 1, name: 'Laver les habits' },
+    { id: 2, name: 'Coder' },
+    { id: 3, name: "Aller à l'école" },
+    { id: 4, name: 'Prier tous les jours' },
+    { id: 5, name: 'Lire la bible' },
   ])
-  const handChange = (e) => {
-    console.log(e.target.id)
-  }
-  const handleDelete = (id) => {
-    const taskCopy = [...tasks]
-    const copyFilter = taskCopy.filter((task) => task.id != id)
-    setTasks(copyFilter)
-  }
+
   const handleAdd = (e) => {
     e.preventDefault()
-    const id = new Date().getTime()
-    const name = change
-    setTasks({
-      id,
-      name,
-    })
+    const trimmed = newTask.trim()
+    if (!trimmed) return
+
+    const newTaskItem = {
+      id: Date.now(),
+      name: trimmed,
+    }
+
+    setTasks([...tasks, newTaskItem])
+    setNewTask('')
   }
+
+  const handleDelete = (id) => {
+    const filteredTasks = tasks.filter((task) => task.id !== id)
+    setTasks(filteredTasks)
+  }
+
   return (
-    <div className="app">
-      <h1 className="text-2xl"> Liste de taches</h1>
-      <ul>
-        {tasks.map((task, index) => (
-          <li key={index}>
-            {task.name}{' '}
-            <button
-              className="bg-cyan-800 p-2 rounded-4xl"
-              onClick={() => handleDelete(task.id)}
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+      <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-md">
+        <h1 className="text-2xl font-bold mb-4 text-center text-gray-800">
+          Liste de tâches
+        </h1>
+
+        <ul className="space-y-2 mb-6">
+          {tasks.map((task) => (
+            <li
+              key={task.id}
+              className="flex justify-between items-center border-b py-2"
             >
-              X
-            </button>
-          </li>
-        ))}
-      </ul>
-      <form action="" onSubmit={handleAdd}>
-        <input
-          type="text"
-          className="border"
-          onChange={(e) => setChange(e.target.value)}
-        />
-        <input
-          type="submit"
-          className="bg-cyan-500 px-4 cursor-pointer"
-          value="Valider"
-        />
-      </form>
+              <span>{task.name}</span>
+              <button
+                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                onClick={() => handleDelete(task.id)}
+              >
+                Supprimer
+              </button>
+            </li>
+          ))}
+        </ul>
+
+        <form onSubmit={handleAdd} className="flex space-x-2">
+          <input
+            type="text"
+            value={newTask}
+            onChange={(e) => setNewTask(e.target.value)}
+            placeholder="Nouvelle tâche"
+            className="flex-grow border rounded px-3 py-2 outline-none focus:ring-2 focus:ring-cyan-500"
+          />
+          <button
+            type="submit"
+            className="bg-cyan-600 text-white px-4 rounded hover:bg-cyan-700"
+          >
+            Ajouter
+          </button>
+        </form>
+      </div>
     </div>
   )
 }
