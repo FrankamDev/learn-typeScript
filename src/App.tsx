@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Tasks from './components/Tasks'
 
 const App = () => {
   const [newTask, setNewTask] = useState('')
@@ -38,18 +39,7 @@ const App = () => {
 
         <ul className="space-y-2 mb-6">
           {tasks.map((task) => (
-            <li
-              key={task.id}
-              className="flex justify-between items-center border-b py-2"
-            >
-              <span>{task.name}</span>
-              <button
-                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                onClick={() => handleDelete(task.id)}
-              >
-                Supprimer
-              </button>
-            </li>
+            <Tasks handleDelete={handleDelete} task={task} />
           ))}
         </ul>
 
